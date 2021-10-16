@@ -9,6 +9,7 @@ document.getElementById('next-lbl').innerText = nextPlayer;
 let col = [0, 0, 0];
 let row = [0, 0, 0];
 let diag = [0, 0];
+let winner;
 
 //This call will create the buttons needed for the gameboard.
 createGameBoard()
@@ -81,8 +82,12 @@ function takeCell(event)
 
     // Check if the game is over
     if (isGameOver())
-    {
-        document.getElementById("game-over-lbl").innerHTML ="<h1>Game Over</h1>";
+    {   //disables all the buttons 
+        for(let i = 0; i < 9; i++) {
+            btns[i].disabled = "disabled";
+        }
+        //lets the users know that the game is over and who wins
+        document.getElementById("game-over-lbl").innerHTML ="<h1>Game Over, " + winner + " wins</h1>";
         // let the lable with the id 'game-over-lbl' display the words 'Game Over' inside <h1> element
     }
 
@@ -93,28 +98,29 @@ function takeCell(event)
 function isGameOver()
 {
 // This function returns true if all the buttons are disabled and false otherwise 
-    //checks to see which player won    
+    //checks to see which player won or if all the buttons have been pressed    
     if(col[0] == 3 || col[1] == 3 || col[2] == 3 
     || row[0] == 3 || row[1] == 3 || row[2] == 3
     ||diag[0] == 3 ||diag[1] == 3){
-      
-        //console.log("X wins");
-        //game should end
-    } 
-    if (col[0] == -3 || col[1] == -3 || col[2] == -3 
+        //if x wins end the game 
+        winner = "X";
+        return true;
+    } else if (col[0] == -3 || col[1] == -3 || col[2] == -3 
             || row[0] == -3 || row[1] == -3 || row[2] == -3
             ||diag[0] == -3 ||diag[1] == -3){
-              
-        //console.log("O wins");
-        //game should end
-    }
-
-    //checks if all the buttons have been pressed
-    for(let i = 0; i < 9; i++) {
-        if(!btns[i].disabled){
-            return false;
+        //if O wins end the game
+        winner = "O"
+        return true;
+    } else {
+        //checks if all the buttons have been pressed
+        for(let i = 0; i < 9; i++) {
+            if(!btns[i].disabled){
+                //if all the buttons have been pressed nobody wins
+                winner = "nobody"
+                return false;
+            }
         }
+        return true;
     }
-    return true;
     
 }
